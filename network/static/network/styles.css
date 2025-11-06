@@ -1,0 +1,50 @@
+.button{
+    border-radius: 5px;
+    border: none;
+    box-shadow: 1px 0px 4px rgba(0, 0, 0, 0.37);
+}
+.create{
+    width: 40%;
+    margin: 2vmin auto;
+    border: none;
+    padding: 2vmin;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+.create label{
+    display: none;
+}
+.create form{
+    display: flex;
+    margin: auto 0;
+}
+textarea#id_description {
+    height: 5vmin;
+    border-radius: 20px;
+    align-content: center;
+    margin-right: 1vmin;
+}
+
+.post{
+    width: 100%;
+    background-color: rgba(240, 248, 255, 0.377);
+    margin: 1vmin 0;
+    padding: 5vmin 5vmin 1vmin 5vmin;
+}
+.post h3{
+    font-size: 2.5vmin;
+    font-weight: bold;
+}
+.timestamp{
+    font-weight: 100;
+    font-size: 2vmin;
+    color: rgba(0, 0, 0, 0.839);
+    margin: 0;
+    float: right;
+}
+.post-btn{
+ border: none;   
+ border-radius: 25px;
+ padding: 1vmin;
+}

@@ -1,0 +1,29 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+<div class='feed'>
+    <h3>{{ profile_user.username }}'s Posts</h3>
+    <div id='app-root'></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}';
+    window.CURRENT_USER_ID = {{ request.user.id }};
+    const profileUserId = '{{ profile_user.id }}';
+</script>
+
+<script type='text/babel' src='{% static "network/Post.jsx" %}'></script>
+<script type='text/babel' src='{% static "network/Feed.jsx" %}'></script>
+<script type='text/babel' src='{% static "network/ProfileApp.jsx" %}'></script>
+<script type='text/babel' src='{% static "network/Followers.jsx" %}'></script>
+
+<script type='text/babel'>
+    const currentUserId = window.CURRENT_USER_ID;
+    const root = ReactDOM.createRoot(document.getElementById('app-root'));
+    root.render(<ProfileApp profileUserId={profileUserId}>
+        <Followers user={profileUserId} currentUserId={currentUserId}/>
+    </ProfileApp>);
+</script>
+{% endblock %}

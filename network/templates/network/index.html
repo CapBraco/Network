@@ -1,0 +1,23 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+<h3>Feed</h3>
+<div id='app-root'></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+
+<script type="text/babel" src="{% static 'network/Post.jsx' %}"></script>
+<script type="text/babel" src="{% static 'network/Feed.jsx' %}"></script>
+<script type="text/babel" src="{% static 'network/CreatePost.jsx' %}"></script>
+<script type="text/babel" src="{% static 'network/App.jsx' %}"></script>
+
+<script type="text/babel">
+    const root = ReactDOM.createRoot(document.getElementById('app-root'));
+    root.render(<App />);
+</script>
+
+{% endblock %}
