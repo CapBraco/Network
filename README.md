@@ -1,6 +1,3 @@
-Got it! Here’s the **GitHub-flavored Markdown version** of your README, ready to paste into `README.md`:
-
-```markdown
 # Network — Social Media Web App (CS50W Project)
 
 This project is a **Threads / Twitter-like social network** built as part of **CS50’s Web Programming with Python and JavaScript**.  
