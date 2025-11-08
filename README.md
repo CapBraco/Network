@@ -141,9 +141,3 @@ This design makes the project easier to maintain while still introducing modern 
 ## 📜 License
 
 MIT — free to use, modify, and build upon.
-
-```
-
-
-Do you want me to do that?
-```
