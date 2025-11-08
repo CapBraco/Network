@@ -14,6 +14,10 @@ function CreatePost({ onPostCreated }) {
       },
       body: JSON.stringify({ description }),
     });
+    if (response.status === 401){
+    window.location.href = "/login";
+    return;
+    }
 
     const data = await response.json();
 
@@ -26,14 +30,16 @@ function CreatePost({ onPostCreated }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Write your post..."
-      />
-      <button type="submit">Post</button>
-    </form>
+    <div className="create-post">
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Write your post..."
+        />
+        <button type="submit">Post</button>
+      </form>
+    </div>
   );
 }
 

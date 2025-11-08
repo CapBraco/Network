@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+
+<div id='root-follow'>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+
+<script type="text/babel" src="{% static 'network/Post.jsx' %}"></script>
+<script type="text/babel" src="{% static 'network/Feed.jsx' %}"></script>
+<script type="text/babel" src="{% static 'network/FollowingFeed.jsx' %}"></script>
+
+<script type="text/babel">
+    const root = ReactDOM.createRoot(document.getElementById('root-follow'));
+    root.render(<FollowingFeed />);
+</script>
+
+
+{% endblock %}

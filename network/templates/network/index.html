@@ -8,6 +8,8 @@
 {% block scripts %}
 <script>
     window.CSRF_TOKEN = '{{ csrf_token }}';
+    window.CURRENT_USER_ID = {{ request.user.id }};
+    window.CURRENT_USER_USERNAME = '{{ request.user.username }}';
 </script>
 
 <script type="text/babel" src="{% static 'network/Post.jsx' %}"></script>

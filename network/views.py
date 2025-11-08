@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.paginator import Paginator
@@ -74,39 +74,38 @@ def register(request):
 @require_POST
 @login_required_json
 def api_create_post(request):
-    if request.method != 'POST':
-        return JsonResponse({'error':'POST request required.'}, status=400)
-
-    data = request.POST.get("description") or request.body
-
     import json
-    try:
-        data = json.loads(request.body)
-    except:
-        return JsonResponse({"error":"Invalid JSON"}, status=400)
-    
-    description = data.get("description", "").strip()
+
+    if request.content_type == "application/json":
+        # JSON request (React fetch)
+        try:
+            data = json.loads(request.body)
+        except:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        description = data.get("description", "").strip()
+
+    else:
+        # Form-data request (HTML form submit)
+        description = request.POST.get("description", "").strip()
+
     if description == "":
         return JsonResponse({"error": "Description cannot be empty"}, status=400)
-    
-    post = Post.objects.create(
-        user=request.user,
-        description=description
-    )
+
+    post = Post.objects.create(user=request.user, description=description)
+
     return JsonResponse({
         "message": "Post created successfully",
         "post": {
             "id": post.id,
-            "user": {"username": post.user.username},
+            "user": {"id": post.user.id, "username": post.user.username},
             "description": post.description,
             "likes_count": 0,
             "liked": False,
-            "timestamp": post.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-
+            "timestamp": post.timestamp.strftime("%Y-%m-%d %H:%M:%S")
         }
     }, status=201)
 
-@login_required_json
+@login_required
 def all_posts(request, user_id=None):
     if user_id:
         profile_user = get_object_or_404(User, pk=user_id)
@@ -141,7 +140,7 @@ def follow_user(request, user_id):
     current_user = request.user
 
     if current_user == target_user:
-        return JsonResponse({"error": "You cannot follow yourself."}, status=400)  # fixed
+        return JsonResponse({"error": "You cannot follow yourself."}, status=400)
 
     if current_user in target_user.followers.all():
         target_user.followers.remove(current_user)
@@ -170,7 +169,12 @@ def api_user_followers(request, user_id):
         "following": following
     })
 
-def serialize_posts(posts_queryset, request, per_page=5):
+
+@login_required
+def following_page(request):
+    return render(request, "network/following.html")
+
+def serialize_posts(posts_queryset, request, per_page=10):
     paginator = Paginator(posts_queryset, per_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -213,3 +217,39 @@ def api_user_posts(request, user_id=None):
     
     posts = Post.objects.filter(user=user).order_by('-timestamp')
     return serialize_posts(posts, request)
+@login_required
+def api_user_following(request):
+    current_user = request.user
+
+    following_users = current_user.following.all()
+    posts = Post.objects.filter(user__in=following_users).order_by('-timestamp')
+
+    return serialize_posts(posts, request)
+
+@login_required
+@require_http_methods(["PUT"])
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if post.user != request.user:
+        return JsonResponse({"error": "You cannot edit this post."}, status=403)
+    import json
+
+
+    try:
+        data = json.loads(request.body)
+    except:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    
+    description = data.get("description", "").strip()
+    if not description:
+        return JsonResponse({"error": "Description cannot be empty."}, status=400)
+    
+    post.description = description
+    post.save()
+
+    return JsonResponse({
+        "id": post.id,
+        "description": post.description,
+        "timestamp": post.timestamp.strftime("%Y-%m-%d %H:%M")
+    })

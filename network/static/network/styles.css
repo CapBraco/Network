@@ -1,10 +1,18 @@
+
 .button{
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
-    box-shadow: 1px 0px 4px rgba(0, 0, 0, 0.37);
+    inline-size: auto;
+    margin: 0.5vmin;
 }
-.create{
-    width: 40%;
+.button:hover{
+    background-color: purple;
+    color: ghostwhite;
+    transition: all .3s;
+    box-shadow: 0px 0px 2px black;
+}
+.create-post{
+    width: 70%;
     margin: 2vmin auto;
     border: none;
     padding: 2vmin;
@@ -12,29 +20,61 @@
     display: flex;
     justify-content: center;
 }
-.create label{
+.create-post label{
     display: none;
 }
-.create form{
+.create-post form{
     display: flex;
     margin: auto 0;
+    width: 100%;
 }
-textarea#id_description {
-    height: 5vmin;
+.create-post textarea {
+    height: auto;
     border-radius: 20px;
     align-content: center;
     margin-right: 1vmin;
+    width: 100%;
 }
-
+.create-post button{
+    border: none;
+    border-radius: 50px;
+    padding: 2vmin;
+}
+.create-post button:hover{
+    background-color: purple;
+    color: ghostwhite;
+    transition: all 0.3s;
+}
+.edit{
+    transition: all .3s;
+}
 .post{
+    transition: all .3s;
     width: 100%;
     background-color: rgba(240, 248, 255, 0.377);
     margin: 1vmin 0;
     padding: 5vmin 5vmin 1vmin 5vmin;
 }
+.post:hover{
+    box-shadow: 0px 0px 5px rgba(128, 0, 128, 0.167);
+}
 .post h3{
     font-size: 2.5vmin;
     font-weight: bold;
+    color: purple;
+}
+.post p{
+    transition: all .3s;
+}
+.post textarea{
+    border-radius: 20px;
+    padding: 2vmin;
+}
+.post a{
+    text-decoration: none;
+}
+.post h3:hover{
+    color: rgba(128, 0, 128, 0.905);
 }
 .timestamp{
     font-weight: 100;
@@ -47,4 +87,17 @@ textarea#id_description {
  border: none;   
  border-radius: 25px;
  padding: 1vmin;
+}
+.pagination{
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes newPost {
+    0%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0;
+    }
 }

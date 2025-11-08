@@ -1,8 +1,17 @@
-function Feed({endpoint, newPost}) {
+function Feed({endpoint, newPost, currentUserId}) {
     const [posts, setPosts] = React.useState([]);
     const [page, setPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
 
+    React.useEffect(() => {
+        fetch(endpoint)
+        .then(response => response.json())
+        .then(data => setPosts(data.posts || []));
+    }, [endpoint]);
+
+    const handleUpdate = (postId, newDescription) => {
+        setPosts(posts.map(p => p.id === postId ? {...p, description: newDescription} : p));
+    };
 
     const loadPosts = async (pageNum) => {
         try{
@@ -25,21 +34,34 @@ function Feed({endpoint, newPost}) {
     }, [page, endpoint]);
     
     React.useEffect(() => {
-        if (newPost) {
-            setPosts(prev => [newPost, ...prev]);
+    if (newPost) {
+        // Normalize newPost to match API shape
+        const normalizedPost = {
+            ...newPost,
+            user: newPost.user
+                ? newPost.user
+                : { 
+                    id: window.CURRENT_USER_ID,
+                    username: window.CURRENT_USER_USERNAME 
+                }, 
+            likes_count: newPost.likes_count || 0,
+            liked: newPost.liked || false,
+        };
+
+        setPosts(prev => [normalizedPost, ...prev]);
         }
-    },[newPost]);
+    }, [newPost]);
 
     return (
         <div>
-            {posts.length > 0 ? (posts.map(p => <Post key={p.id} post={p} />)) : (<p>No posts yet.</p>)}
+            {posts.length > 0 ? (posts.map(p => <Post key={p.id} post={p} currentUserId={Number(window.CURRENT_USER_ID)} onUpdate={handleUpdate} />)) : (<p>No posts yet.</p>)}
         
         <div className='pagination'>
-            <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+            <button className='button' disabled={page <= 1} onClick={() => setPage(page - 1)}>
                 Previous
             </button>
             <span> Page {page} of {totalPages} </span>
-            <button disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
+            <button className='button' disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
                 Next
             </button>
         </div>

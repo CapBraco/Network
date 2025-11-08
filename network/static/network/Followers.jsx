@@ -33,7 +33,7 @@ function Followers ( {user, currentUserId} ) {
              }
         });
         const data = await response.json();
-        
+
         if (response.ok) {
             setFollowed(data.followed)
             setFollowers(data.followers_count)
@@ -49,7 +49,12 @@ function Followers ( {user, currentUserId} ) {
 
     return (
         <div>
-            <button onClick={toggleFollow}>{followed ? "Unfollow" : "Follow"}</button>
+            {currentUserId !== Number(user) && (
+                <button onClick={toggleFollow} className='button'>
+                    {followed ? "Unfollow" : "Follow"}
+                </button>
+            )}
+
             <p>Followers: {followers}</p>
             <p>Following: {following}</p>
         </div>

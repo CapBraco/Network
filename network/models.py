@@ -25,3 +25,4 @@ class Comment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.user.username} commented: {self.description[:30]}"
+    
